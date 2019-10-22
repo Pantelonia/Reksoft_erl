@@ -32,3 +32,6 @@ true
 10> bool:b_xor(true, true). 
 false
 ```
+
+#### Решение
+[bool.erl](https://github.com/Pantelonia/Reksoft_erl/blob/master/hm1/bool/bool.erl)
