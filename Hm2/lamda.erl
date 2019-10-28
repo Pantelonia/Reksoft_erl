@@ -1,5 +1,6 @@
--module(lamda).
--compile([export_all]).
+%%%%%%%%%%%%%
+%First part %
+%%%%%%%%%%%%%
 F = fun Lamda([Element|T],[Element1|T1], Operation)  ->
 			case T++T1 of
 				[] ->
@@ -14,14 +15,10 @@ F = fun Lamda([Element|T],[Element1|T1], Operation)  ->
 	end.
 
 
-% [
-%     {dimension, 5},
-%     {dotsA, [{1, 2, 3, 4, 5}, {7, 8, 9, 10, 11}]},
-%     {dotsB, [{0, 0, 0, 0, 0}, {-1, -2, -3, -4, -5}]}
-% ]
 
-
-
+%%%%%%%%%%%%%
+%Second part%
+%%%%%%%%%%%%%
 D = fun Lamda([{dimension, N},{dotsA, List1}, {dotsB, List2}])->
 	Func = fun Distanse(PointA, PointB, N) ->
 		if
@@ -38,9 +35,8 @@ D = fun Lamda([{dimension, N},{dotsA, List1}, {dotsB, List2}])->
 				H*H + Loop(T)
 		end
 	end,
-	[math:sqrt(F2(Fun(A, B)) || A <- List1, B <- List2]
-end.
-
+	
+[math:sqrt(F2(Func(A,B,N)))||A <- List1, B <- List2]
 	
 end.
 
