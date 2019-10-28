@@ -17,7 +17,8 @@ delete(Key, [{Key, _Element} | DB], ResultDB) ->
 
 delete(Key, [{Key1, Element}| DB], ResultDB) ->
 	delete(Key, DB, [{Key1, Element}|ResultDB]);
-% delete(_Key,[], _ResultDb) -> 
+delete(_Key,[], ResultDb) -> 
+	ResultDb.
 
 
 reverse(DB)->
