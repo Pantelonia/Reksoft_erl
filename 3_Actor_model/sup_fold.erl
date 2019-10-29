@@ -39,6 +39,3 @@ get_result([_Fist|Pids], Acc)->
         {_First, Result} ->
             get_result(Pids, [Result|Acc])
     end.
-
-
-
