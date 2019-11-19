@@ -8,7 +8,7 @@ new(Name) ->
     gen_server:start_link({local, Name}, ?MODULE, [], []).
 
 find(Key)->
-    gen_server:call(Name, {find, Key})
+    gen_server:call(Name, {find, Key}).
 
 delete(Name)->
     gen_server:call(Name,delete).
@@ -17,10 +17,10 @@ delete(Name, Key)->
     gen_server:cast(Name,{delete, Key}).
  
 delete_all(Name)->
-    gen_server:cast(Name, delete_all)
+    gen_server:cast(Name, delete_all).
 
 insert(Name, Key, Value) ->
-    gen_server:cast(Name, {insert, Key, Value})
+    gen_server:cast(Name, {insert, Key, Value}).
 
 
 
