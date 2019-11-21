@@ -1,37 +1,59 @@
 -module(code_lock).
 -behaviour(gen_statem).
--define(Name, code_lock).
--behaviour(gen_server).
+-define(NAME, code_lock).
 
-%% API
--export([start/1, stop/1, start_link/1]).
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
--record(state, {dummy}).
+-export([start_link/1]).
+-export([button/1]).
+-export([init/1,callback_mode/0,terminate/3]).
+-export([locked/3,open/3]).
 
 
-start_link(Name) ->
-   gen_server:start_link({local, ?Name}, ?MODULE, [], []).
+start_link(Code) ->
+   gen_statem:start_link({local, ?NAME}, ?MODULE, Code, []).
 
-init(_Args) ->
-   {ok, #state{dummy=1}}.
+init(Code) ->
+   do_lock(),
+   Data = #{code => Code, length => length(Code), buttons => [] },
+   {ok, locked, Data}.
 
-handle_call(stop, _From, State) ->
-   {stop, normal, stopped, State};
+callback_mode() ->
+   state_functions.
 
-handle_call(_Request, _From, State) ->
-    {reply, ok, State}.
+button(Button)->
+   gen_statem:cast(?NAME, {button, Button}).
 
-handle_cast(_Msg, State) ->
-   {noreply, State}.
+locked(cast, {button, Button}, 
+#{code := Code, length:= Length, buttons:= Buttons}= Data)->
+   NewButtons = 
+      if
+         length(Buttons)< Length ->
+            Buttons;
+         true ->
+               tl(Buttons)
+      end ++[Button],
+    if
+      NewButtons =:= Code -> % Correct
+	   do_unlock(),
+         {next_state, open, Data#{buttons := []},
+         [{state_timeout,10000,lock}]}; % Time in milliseconds
+	   true -> % Incomplete | Incorrect
+            {next_state, locked, Data#{buttons := NewButtons}}
+    end.
 
-handle_info(_Info, State) ->
-   {noreply, State}.
+open(state_timeout, lock,  Data) ->
+    do_lock(),
+    {next_state, locked, Data};
+open(cast, {button,_}, Data) ->
+    {next_state, open, Data}.
 
-terminate(_Reason, _State) ->
-   ok.
+do_lock() ->
+    io:format("Lock~n", []).
+do_unlock() ->
+    io:format("Unlock~n", []).
 
-code_change(_OldVsn, State, _Extra) ->
-   {ok, State}.
+terminate(_Reason, State, _Data) ->
+    State =/= locked andalso do_lock(),
+    ok.
 
 
 
