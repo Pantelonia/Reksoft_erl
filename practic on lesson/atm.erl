@@ -23,6 +23,7 @@ push_button/1
   init/1,
   waiting_card/3,
   waiting_pin/3,
+  withdraw_from_balance/3,
   handle_event/4,
   terminate/3,
   code_change/4,
@@ -133,7 +134,7 @@ waiting_pin(_EventType, _EventContent, _State) ->
     keep_state_and_data.
 
 
-withdraw_from_balance({call, From}, {button, enter}, #state{accounts = Accounts,  active_user = User}, buffer = Buf)->
+withdraw_from_balance({call, From}, {button, enter}, #state{accounts = Accounts,  active_user = User, buffer = Buf})->
   Sum = lists:reverse(Buf),
   if
     Sum > User#account.balance ->
@@ -141,16 +142,16 @@ withdraw_from_balance({call, From}, {button, enter}, #state{accounts = Accounts,
       {keep_state, NewState,[{reply, From, {error, "Your balance havn't this sum"}}]};
     true ->
       NewBalance = User#account.balance - sum,
-      {_value, _tuple, NewAccounts} = lists:keytake(Card, #account.card, Accounts),
-      NewState  = [{card = User#account.card, pin = User#account.pin, balance = User#account.balance}| NewAccounts],
+      {_value, _tuple, NewAccounts} = lists:keytake(User#account.card, #account.card, Accounts),
+      NewState  = [{card = User#account.card, pin = User#account.pin, balance = NewBalance}| NewAccounts],
       {next_state, waiting_card, NewState, [{reply, From, {ok, "Get your money and card"}}]}
   end;
 
-withdraw_from_balance(cast, {button, Button}, #state{accounts = Accounts,  active_user = User})->
+withdraw_from_balance(cast, {button, Button}, #state{accounts = Accounts,  active_user = User, buffer = Buf})->
   NewState = #state{accounts = Accounts, active_user = User, buffer = [Button +48| Buf]},
   {keep_state, NewState};
 
-  withdraw_from_balance(_EventType, _EventContent, _State) ->
+withdraw_from_balance(_EventType, _EventContent, _State) ->
   keep_state_and_data.
 
   
