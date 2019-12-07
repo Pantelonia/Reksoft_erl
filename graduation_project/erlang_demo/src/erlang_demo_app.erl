@@ -12,15 +12,16 @@
 
 start(_StartType, _StartArgs) ->
     {ok,Pid_server} = local_back:start_link(),
+    {ok, Port} = application:get_env(erlang_demo, port),
     State = #state{pid_server = Pid_server},
     Dispatch = cowboy_router:compile([
             {'_', [
                 {"/", erlang_demo_handler, []},
-                {"/websocket", erws_handler, [State]}
+                {"/websocket", erws_handler, State}
             ]}
         ]),
     {ok, _} = cowboy:start_clear(my_http_listener,
-        [{port, 8080}],
+        [{port, Port}],
         #{env => #{dispatch => Dispatch}}
         ),    
 

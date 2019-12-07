@@ -26,6 +26,7 @@ websocket_init(State) ->
 
 websocket_handle({text, Msg}, State) ->
   io:format("Got: ~p~n", [Msg]),
+%%  gen_server:cast(PidServer,{rec, Msg}),
   {[], State};
 
 websocket_handle(_Data, State) ->

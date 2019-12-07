@@ -106,6 +106,12 @@ handle_cast({send, Msg}, #state{websocket = WebSocket} = State)->
   WebSocket ! {send,Msg},
   {noreply, State}.
 
+%%That function take the msg from front and save it in DB. After that it should to send msg to all users
+%%handle_cast({rec, Msg}, State) ->
+
+
+
+
 %%--------------------------------------------------------------------
 %% @private
 %% @doc

@@ -5,5 +5,6 @@ A Cowboy OTP application
 
 Build
 -----
+start back command
 
-    $ rebar3 compile
+erl -sname Paul -erlang_demo port 8080 -pa "C:\Users\User\Desktop\Reksoft_erl\graduation_project\erlang_demo\_build\default\lib\erlang_demo\ebin" -pa "C:\Users\User\Desktop\Reksoft_erl\graduation_project\erlang_demo\_build\default\lib\cowboy\ebin" -pa "C:\Users\User\Desktop\Reksoft_erl\graduation_project\erlang_demo\_build\default\lib\cowlib\ebin" -pa "C:\Users\User\Desktop\Reksoft_erl\graduation_project\erlang_demo\_build\default\lib\ranch\ebin" -s test main
