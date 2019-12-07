@@ -18,8 +18,9 @@
 init(Req, State) ->
   {cowboy_websocket, Req, State}.
 
-websocket_init(#state{pid_server = PidServer} = State) ->
-  PidServer ! {websocket, self()},
+websocket_init(State) ->
+  PidServer = State#state.pid_server,
+  gen_server:cast(PidServer, {websocket, self()}),
   register(websocket, self()),
   {[{text, <<"Hello!">>}], State}.
 

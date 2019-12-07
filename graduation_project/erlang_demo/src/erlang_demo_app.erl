@@ -11,7 +11,7 @@
 -record(state, {pid_server}).
 
 start(_StartType, _StartArgs) ->
-    Pid_server = local_back:start_link(),
+    {ok,Pid_server} = local_back:start_link(),
     State = #state{pid_server = Pid_server},
     Dispatch = cowboy_router:compile([
             {'_', [
