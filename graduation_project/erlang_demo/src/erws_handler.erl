@@ -21,12 +21,12 @@ init(Req, State) ->
 websocket_init(State) ->
   PidServer = State#state.pid_server,
   gen_server:cast(PidServer, {websocket, self()}),
-  register(websocket, self()),
   {[{text, <<"Hello!">>}], State}.
 
 websocket_handle({text, Msg}, State) ->
   io:format("Got: ~p~n", [Msg]),
-%%  gen_server:cast(PidServer,{rec, Msg}),
+  PidServer = State#state.pid_server,
+  gen_server:cast(PidServer,{forward, Msg}),
   {[], State};
 
 websocket_handle(_Data, State) ->
